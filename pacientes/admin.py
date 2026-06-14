@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Cliente, Veterinario, Mascota
+from .models import Cliente, Veterinario, Mascota, Cita, HistorialMedico
 
 
 @admin.register(Cliente)
@@ -20,3 +20,16 @@ class MascotaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'especie', 'raza', 'cliente', 'is_active')
     list_filter = ('especie', 'is_active')
     search_fields = ('nombre', 'raza')
+
+@admin.register(Cita)
+class CitaAdmin(admin.ModelAdmin):
+    list_display = ('mascota', 'veterinario', 'fecha', 'hora', 'estado')
+    list_filter = ('estado', 'fecha')
+    search_fields = ('mascota__nombre',)
+
+
+@admin.register(HistorialMedico)
+class HistorialMedicoAdmin(admin.ModelAdmin):
+    list_display = ('mascota', 'veterinario', 'fecha', 'diagnostico')
+    list_filter = ('fecha',)
+    search_fields = ('mascota__nombre', 'diagnostico')
