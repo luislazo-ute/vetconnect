@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'mongo_app',
+    'pacientes',
 ]
 
 MIDDLEWARE = [
