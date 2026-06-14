@@ -1,0 +1,26 @@
+# Entorno virtual
+.venv/
+venv/
+
+# Variables de entorno (SECRETO - nunca subir)
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Migraciones (las dejamos, pero si acaso)
+# */migrations/*.py
+# !*/migrations/__init__.py
