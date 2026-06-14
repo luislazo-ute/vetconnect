@@ -1,23 +1,20 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
 from bson import ObjectId
 from datetime import datetime
 from .mongo_connection import get_collection
 
 
-# Función auxiliar: convierte el _id de Mongo (ObjectId) a texto
+
 def serializar(doc):
     if doc and '_id' in doc:
         doc['_id'] = str(doc['_id'])
     return doc
 
 
-# ===== CONSULTAS REMOTAS (telemedicina - cámara) =====
-class ConsultasRemotasView(APIView):
-    permission_classes = [AllowAny]
 
+class ConsultasRemotasView(APIView):
     def get(self, request):
         coleccion = get_collection('consultas_remotas')
         consultas = [serializar(doc) for doc in coleccion.find()]
@@ -34,8 +31,6 @@ class ConsultasRemotasView(APIView):
 
 
 class ConsultaRemotaDetalleView(APIView):
-    permission_classes = [AllowAny]
-
     def get(self, request, pk):
         coleccion = get_collection('consultas_remotas')
         doc = coleccion.find_one({'_id': ObjectId(pk)})
@@ -59,10 +54,8 @@ class ConsultaRemotaDetalleView(APIView):
         return Response({'mensaje': 'Eliminada'}, status=status.HTTP_204_NO_CONTENT)
 
 
-# ===== MONITOREO DE SIGNOS (sensores IoT) =====
-class MonitoreoSignosView(APIView):
-    permission_classes = [AllowAny]
 
+class MonitoreoSignosView(APIView):
     def get(self, request):
         coleccion = get_collection('monitoreo_signos')
         signos = [serializar(doc) for doc in coleccion.find()]
@@ -79,8 +72,6 @@ class MonitoreoSignosView(APIView):
 
 
 class MonitoreoSignoDetalleView(APIView):
-    permission_classes = [AllowAny]
-
     def get(self, request, pk):
         coleccion = get_collection('monitoreo_signos')
         doc = coleccion.find_one({'_id': ObjectId(pk)})
@@ -103,10 +94,8 @@ class MonitoreoSignoDetalleView(APIView):
             return Response({'error': 'No encontrado'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'mensaje': 'Eliminado'}, status=status.HTTP_204_NO_CONTENT)
 
-# ===== NOTAS DE VOZ  =====
-class NotasVozView(APIView):
-    permission_classes = [AllowAny]
 
+class NotasVozView(APIView):
     def get(self, request):
         coleccion = get_collection('notas_voz_consulta')
         signos = [serializar(doc) for doc in coleccion.find()]
@@ -122,8 +111,6 @@ class NotasVozView(APIView):
 
 
 class NotaVozDetalleView(APIView):
-    permission_classes = [AllowAny]
-
     def get(self, request, pk):
         coleccion = get_collection('notas_voz_consulta')
         doc = coleccion.find_one({'_id': ObjectId(pk)})
@@ -147,10 +134,8 @@ class NotaVozDetalleView(APIView):
         return Response({'mensaje': 'Eliminado'}, status=status.HTTP_204_NO_CONTENT)
 
 
-# ===== RASTREO GPS  =====
-class TrackingVisitasView(APIView):
-    permission_classes = [AllowAny]
 
+class TrackingVisitasView(APIView):
     def get(self, request):
         coleccion = get_collection('tracking_visitas')
         signos = [serializar(doc) for doc in coleccion.find()]
@@ -167,8 +152,6 @@ class TrackingVisitasView(APIView):
 
 
 class TrackingVisitaDetalleView(APIView):
-    permission_classes = [AllowAny]
-
     def get(self, request, pk):
         coleccion = get_collection('tracking_visitas')
         doc = coleccion.find_one({'_id': ObjectId(pk)})
@@ -191,10 +174,8 @@ class TrackingVisitaDetalleView(APIView):
             return Response({'error': 'No encontrado'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'mensaje': 'Eliminado'}, status=status.HTTP_204_NO_CONTENT)
 
-# ===== GALERIA DE MASCOTAS  =====
-class GaleriaMascotaView(APIView):
-    permission_classes = [AllowAny]
 
+class GaleriaMascotaView(APIView):
     def get(self, request):
         coleccion = get_collection('galeria_mascota')
         signos = [serializar(doc) for doc in coleccion.find()]
@@ -210,8 +191,6 @@ class GaleriaMascotaView(APIView):
 
 
 class GaleriaMascotaDetalleView(APIView):
-    permission_classes = [AllowAny]
-
     def get(self, request, pk):
         coleccion = get_collection('galeria_mascota')
         doc = coleccion.find_one({'_id': ObjectId(pk)})
