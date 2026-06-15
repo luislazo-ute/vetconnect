@@ -21,6 +21,9 @@ db.sqlite3-journal
 # VS Code
 .vscode/
 
+# Claude Code (config local)
+.claude/
+
 # Migraciones (las dejamos, pero si acaso)
 # */migrations/*.py
 # !*/migrations/__init__.py
