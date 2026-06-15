@@ -8,8 +8,11 @@ class IsAdminOrReadOnly(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        # Si el método es de solo lectura (GET, HEAD, OPTIONS), permitir
+        # Sin usuario autenticado no se permite nada (ni lectura).
+        if not (request.user and request.user.is_authenticated):
+            return False
+        # Lectura (GET, HEAD, OPTIONS) para cualquier usuario autenticado.
         if request.method in permissions.SAFE_METHODS:
             return True
-        # Para escritura, solo si es staff (admin)
-        return request.user and request.user.is_staff
+        # Escritura solo para staff (admin).
+        return request.user.is_staff

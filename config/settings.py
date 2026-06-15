@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -83,6 +84,10 @@ DATABASES = {
 # MongoDB
 MONGO_URI = env('MONGO_URI')
 MONGO_DB = env('MONGO_DB')
+
+# CORS (django-cors-headers)
+# En desarrollo permitimos todos los orígenes; en producción se debe restringir.
+CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL_ORIGINS', default=True)
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
