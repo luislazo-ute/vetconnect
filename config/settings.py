@@ -2,6 +2,7 @@
 from pathlib import Path
 import environ
 import os
+import sys
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -83,6 +84,15 @@ DATABASES = {
         'PORT': env('DB_PORT'),
     }
 }
+
+# Durante los tests, Django necesita crear/borrar una base temporal.
+# El usuario de la app (vetuser) no tiene permiso CREATEDB, así que la
+# conexión de tests usa un usuario con privilegios (por defecto el
+# superusuario local). Esto NO afecta la conexión normal de la app.
+TESTING = 'test' in sys.argv
+if TESTING:
+    DATABASES['default']['USER'] = env('DB_TEST_USER', default='luislazo')
+    DATABASES['default']['PASSWORD'] = env('DB_TEST_PASSWORD', default='')
 
 # MongoDB
 MONGO_URI = env('MONGO_URI')

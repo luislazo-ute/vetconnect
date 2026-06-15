@@ -5,7 +5,7 @@ from ..permissions import IsAdminOrReadOnly
 
 
 class VeterinarioViewSet(viewsets.ModelViewSet):
-    queryset = Veterinario.objects.all()
+    queryset = Veterinario.objects.all().order_by('id')
     serializer_class = VeterinarioSerializer
     permission_classes = [IsAdminOrReadOnly]
     search_fields = ['nombre', 'especialidad']

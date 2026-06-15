@@ -5,7 +5,7 @@ from ..permissions import IsAdminOrReadOnly
 
 
 class MascotaViewSet(viewsets.ModelViewSet):
-    queryset = Mascota.objects.all()
+    queryset = Mascota.objects.all().order_by('id')
     serializer_class = MascotaSerializer
     permission_classes = [IsAdminOrReadOnly]
     search_fields = ['nombre', 'raza']

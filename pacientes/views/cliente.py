@@ -5,7 +5,7 @@ from ..permissions import IsAdminOrReadOnly
 
 
 class ClienteViewSet(viewsets.ModelViewSet):
-    queryset = Cliente.objects.all()
+    queryset = Cliente.objects.all().order_by('id')
     serializer_class = ClienteSerializer
     permission_classes = [IsAdminOrReadOnly]
     search_fields = ['user__username', 'telefono']

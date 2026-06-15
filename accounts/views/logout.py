@@ -27,5 +27,5 @@ class LogoutView(APIView):
             )
         return Response(
             {'mensaje': 'Sesión cerrada correctamente.'},
-            status=status.HTTP_205_RESET_CONTENT,
+            status=status.HTTP_200_OK,
         )
