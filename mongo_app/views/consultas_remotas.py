@@ -1,10 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from bson import ObjectId
 from datetime import datetime
 from ..mongo_connection import get_collection
-from .helpers import serializar
+from .helpers import serializar, parse_object_id, error_response, cuerpo_invalido
 
 
 class ConsultasRemotasView(APIView):
@@ -14,6 +13,9 @@ class ConsultasRemotasView(APIView):
         return Response(consultas, status=status.HTTP_200_OK)
 
     def post(self, request):
+        error = cuerpo_invalido(request.data)
+        if error:
+            return error_response(error)
         coleccion = get_collection('consultas_remotas')
         data = request.data.copy()
         data['fecha'] = datetime.utcnow().isoformat()
@@ -25,23 +27,35 @@ class ConsultasRemotasView(APIView):
 
 class ConsultaRemotaDetalleView(APIView):
     def get(self, request, pk):
+        oid = parse_object_id(pk)
+        if oid is None:
+            return error_response('ID inválido.')
         coleccion = get_collection('consultas_remotas')
-        doc = coleccion.find_one({'_id': ObjectId(pk)})
+        doc = coleccion.find_one({'_id': oid})
         if not doc:
             return Response({'error': 'No encontrada'}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializar(doc), status=status.HTTP_200_OK)
 
     def put(self, request, pk):
+        oid = parse_object_id(pk)
+        if oid is None:
+            return error_response('ID inválido.')
+        error = cuerpo_invalido(request.data)
+        if error:
+            return error_response(error)
         coleccion = get_collection('consultas_remotas')
-        coleccion.update_one({'_id': ObjectId(pk)}, {'$set': request.data})
-        doc = coleccion.find_one({'_id': ObjectId(pk)})
+        coleccion.update_one({'_id': oid}, {'$set': request.data})
+        doc = coleccion.find_one({'_id': oid})
         if not doc:
             return Response({'error': 'No encontrada'}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializar(doc), status=status.HTTP_200_OK)
 
     def delete(self, request, pk):
+        oid = parse_object_id(pk)
+        if oid is None:
+            return error_response('ID inválido.')
         coleccion = get_collection('consultas_remotas')
-        resultado = coleccion.delete_one({'_id': ObjectId(pk)})
+        resultado = coleccion.delete_one({'_id': oid})
         if resultado.deleted_count == 0:
             return Response({'error': 'No encontrada'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'mensaje': 'Eliminada'}, status=status.HTTP_204_NO_CONTENT)
