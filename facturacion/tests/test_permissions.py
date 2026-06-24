@@ -66,7 +66,7 @@ class FacturacionPermisosTests(APITestCase):
         self._auth(self.token_normal)
         res = self.client.post(
             '/api/productos/',
-            {'nombre': 'Prod Test', 'precio': '5.00', 'stock': 1},
+            {'nombre': 'Prod Test', 'precio_venta': '5.00', 'stock_actual': 1},
             format='json',
         )
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
@@ -81,7 +81,7 @@ class FacturacionPermisosTests(APITestCase):
         )
         res = self.client.post(
             '/api/productos/',
-            {'nombre': 'Prod Test', 'precio': '5.00', 'stock': 1,
+            {'nombre': 'Prod Test', 'precio_venta': '5.00', 'stock_actual': 1,
              'categoria': res_cat.data['id']},
             format='json',
         )

@@ -7,5 +7,6 @@ class CompraSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Compra
-        fields = ['id', 'proveedor', 'proveedor_nombre', 'fecha', 'total', 'estado']
-        read_only_fields = ['id', 'fecha']
+        fields = ['id', 'proveedor', 'proveedor_nombre', 'fecha_compra',
+                  'numero_factura', 'total', 'estado']
+        read_only_fields = ['id', 'fecha_compra']

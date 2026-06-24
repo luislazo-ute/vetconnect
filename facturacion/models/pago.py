@@ -15,9 +15,9 @@ class Pago(models.Model):
         on_delete=models.CASCADE,
         related_name='pagos',
     )
-    monto = models.DecimalField(max_digits=12, decimal_places=2)
+    monto = models.DecimalField(max_digits=10, decimal_places=2)
     fecha_pago = models.DateTimeField(auto_now_add=True)
-    metodo_pago = models.CharField(max_length=20, choices=METODOS, default='efectivo')
+    metodo_pago = models.CharField(max_length=50, choices=METODOS, default='efectivo')
     referencia = models.CharField(max_length=100, blank=True, default='')
 
     def __str__(self):

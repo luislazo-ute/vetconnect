@@ -10,4 +10,4 @@ class ProductoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     search_fields = ['nombre']
     filterset_fields = ['is_active', 'categoria']
-    ordering_fields = ['nombre', 'precio', 'stock']
+    ordering_fields = ['nombre', 'precio_venta', 'stock_actual']

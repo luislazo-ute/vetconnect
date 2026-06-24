@@ -36,7 +36,7 @@ class CategoriaProductoAdmin(admin.ModelAdmin):
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'precio', 'stock', 'categoria', 'is_active')
+    list_display = ('nombre', 'precio_venta', 'stock_actual', 'stock_minimo', 'categoria', 'is_active')
     list_filter = ('categoria', 'is_active')
     search_fields = ('nombre',)
 
@@ -49,7 +49,7 @@ class ProveedorAdmin(admin.ModelAdmin):
 
 @admin.register(Compra)
 class CompraAdmin(admin.ModelAdmin):
-    list_display = ('id', 'proveedor', 'fecha', 'total', 'estado')
+    list_display = ('id', 'proveedor', 'fecha_compra', 'total', 'estado')
     list_filter = ('estado',)
 
 

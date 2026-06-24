@@ -14,7 +14,8 @@ class Compra(models.Model):
         on_delete=models.PROTECT,
         related_name='compras',
     )
-    fecha = models.DateTimeField(auto_now_add=True)
+    fecha_compra = models.DateTimeField(auto_now_add=True)
+    numero_factura = models.CharField(max_length=50, blank=True, default='')
     total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='pendiente')
 
@@ -25,4 +26,4 @@ class Compra(models.Model):
         db_table = 'compra'
         verbose_name = 'Compra'
         verbose_name_plural = 'Compras'
-        ordering = ['-fecha']
+        ordering = ['-fecha_compra']

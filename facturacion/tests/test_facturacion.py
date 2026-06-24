@@ -44,7 +44,7 @@ class FacturacionCrudTests(APITestCase):
     def _crear_producto(self, categoria_id):
         res = self.client.post(
             '/api/productos/',
-            {'nombre': 'Vacuna X', 'precio': '25.00', 'stock': 10,
+            {'nombre': 'Vacuna X', 'precio_venta': '25.00', 'stock_actual': 10,
              'categoria': categoria_id},
             format='json',
         )

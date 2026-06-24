@@ -9,4 +9,4 @@ class CompraViewSet(viewsets.ModelViewSet):
     serializer_class = CompraSerializer
     permission_classes = [IsAdminOrReadOnly]
     filterset_fields = ['estado', 'proveedor']
-    ordering_fields = ['fecha', 'total']
+    ordering_fields = ['fecha_compra', 'total']

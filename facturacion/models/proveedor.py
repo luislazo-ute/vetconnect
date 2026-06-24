@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Proveedor(models.Model):
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=150)
     contacto = models.CharField(max_length=100, blank=True, default='')
     telefono = models.CharField(max_length=20)
     email = models.EmailField(blank=True, default='')
