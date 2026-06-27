@@ -139,6 +139,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+# Carpeta donde collectstatic junta los estáticos para que Nginx los sirva (deploy).
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # Django REST Framework
