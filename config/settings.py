@@ -104,6 +104,11 @@ MONGO_DB = env('MONGO_DB')
 # CORS (django-cors-headers)
 # En desarrollo permitimos todos los orígenes; en producción se debe restringir.
 CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL_ORIGINS', default=True)
+
+# HTTPS detrás de un proxy (Nginx termina el SSL y reenvía por HTTP a Gunicorn).
+# Necesario para que Django reconozca la petición como segura y para el CSRF del admin.
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
