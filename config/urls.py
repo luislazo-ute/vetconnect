@@ -17,4 +17,5 @@ urlpatterns = [
     path('api/mongo/', include('mongo_app.urls')),
     path('api/', include('pacientes.urls')),
     path('api/', include('facturacion.urls')),
+    path('api/', include('clinica.urls')),
 ]
