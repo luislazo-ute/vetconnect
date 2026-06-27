@@ -1,0 +1,107 @@
+name: VetConnect — CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ── Job 1: Tests (Postgres + MongoDB) ──────────────────────────
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: vetconnect_db
+          POSTGRES_USER: vetuser
+          POSTGRES_PASSWORD: vet123456
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: |
+          uv venv --python 3.12
+          uv pip install -r requirements.txt
+
+      - name: Run tests
+        env:
+          SECRET_KEY: test-secret-key-for-ci-only
+          DEBUG: "True"
+          DB_NAME: vetconnect_db
+          DB_USER: vetuser
+          DB_PASSWORD: vet123456
+          DB_HOST: localhost
+          DB_PORT: "5432"
+          DB_TEST_USER: vetuser
+          DB_TEST_PASSWORD: vet123456
+          MONGO_URI: mongodb://localhost:27017/
+          MONGO_DB: vetconnect_mongo
+          CORS_ALLOW_ALL_ORIGINS: "True"
+        run: .venv/bin/python manage.py test --verbosity 2
+
+  # ── Job 2: Deploy al VPS (solo si los tests pasan) ─────────────
+  deploy:
+    name: Deploy to VPS
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy on server
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} 'bash -s' <<'ENDSSH'
+          set -e
+          export PATH="$HOME/.local/bin:$PATH"
+          cd /opt/vetconnect
+
+          echo "── 1. Trayendo cambios ──"
+          git pull --ff-only
+
+          echo "── 2. Instalando dependencias ──"
+          uv pip install -r requirements.txt
+
+          echo "── 3. Migraciones ──"
+          .venv/bin/python manage.py migrate --noinput
+
+          echo "── 4. Estáticos ──"
+          .venv/bin/python manage.py collectstatic --noinput
+
+          echo "── 5. Reiniciando Gunicorn ──"
+          systemctl restart gunicorn-vetconnect
+
+          echo "── 6. Health check ──"
+          sleep 3
+          curl -sf http://127.0.0.1/api/health/ && echo " OK" || (echo "API ERROR" && exit 1)
+
+          echo "Despliegue completado."
+          ENDSSH
