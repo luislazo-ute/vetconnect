@@ -1,0 +1,393 @@
+{
+  "info": {
+    "name": "VetConnect API",
+    "description": "Colección de pruebas de la API VetConnect (Django REST Framework + JWT). Ejecuta primero Auth > Login: guarda automáticamente el access/refresh en variables de la colección.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{access}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://vetconnect-api.uaeftt-ute.site" },
+    { "key": "access", "value": "" },
+    { "key": "refresh", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/register/",
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"ana\",\n  \"email\": \"ana@vet.com\",\n  \"password\": \"ClaveSegura123\",\n  \"password2\": \"ClaveSegura123\"\n}" }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.access) pm.collectionVariables.set('access', data.access);",
+                  "if (data.refresh) pm.collectionVariables.set('refresh', data.refresh);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/login/",
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin1234!\"\n}" }
+          }
+        },
+        {
+          "name": "Refresh token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/token/refresh/",
+            "body": { "mode": "raw", "raw": "{\n  \"refresh\": \"{{refresh}}\"\n}" }
+          }
+        },
+        {
+          "name": "Verify token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/token/verify/",
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"{{access}}\"\n}" }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/logout/",
+            "body": { "mode": "raw", "raw": "{\n  \"refresh\": \"{{refresh}}\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        { "name": "List users (admin)", "request": { "method": "GET", "url": "{{base_url}}/api/users/" } },
+        { "name": "Mi perfil", "request": { "method": "GET", "url": "{{base_url}}/api/users/profile/" } },
+        {
+          "name": "Cambiar password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/users/change-password/",
+            "body": { "mode": "raw", "raw": "{\n  \"old_password\": \"Admin1234!\",\n  \"new_password\": \"NuevaClave456\",\n  \"new_password2\": \"NuevaClave456\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pacientes",
+      "item": [
+        { "name": "Clientes - List", "request": { "method": "GET", "url": "{{base_url}}/api/clientes/" } },
+        {
+          "name": "Clientes - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/clientes/",
+            "body": { "mode": "raw", "raw": "{\n  \"user\": 1,\n  \"telefono\": \"0987654321\",\n  \"direccion\": \"Av. Siempre Viva 123\"\n}" }
+          }
+        },
+        { "name": "Clientes - Retrieve", "request": { "method": "GET", "url": "{{base_url}}/api/clientes/1/" } },
+        {
+          "name": "Clientes - Update (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/clientes/1/",
+            "body": { "mode": "raw", "raw": "{\n  \"telefono\": \"0991112233\"\n}" }
+          }
+        },
+        { "name": "Clientes - Delete", "request": { "method": "DELETE", "url": "{{base_url}}/api/clientes/1/" } },
+        { "name": "Veterinarios - List", "request": { "method": "GET", "url": "{{base_url}}/api/veterinarios/" } },
+        {
+          "name": "Veterinarios - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/veterinarios/",
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Dr. House\",\n  \"especialidad\": \"General\",\n  \"telefono\": \"022555000\",\n  \"email\": \"house@vet.com\"\n}" }
+          }
+        },
+        { "name": "Mascotas - List (search/filtro/orden)", "request": { "method": "GET", "url": "{{base_url}}/api/mascotas/?search=Firulais&especie=perro&ordering=nombre&page=1" } },
+        {
+          "name": "Mascotas - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/mascotas/",
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Firulais\",\n  \"especie\": \"perro\",\n  \"raza\": \"Mestizo\",\n  \"cliente\": 1\n}" }
+          }
+        },
+        { "name": "Mascotas - Retrieve", "request": { "method": "GET", "url": "{{base_url}}/api/mascotas/1/" } },
+        {
+          "name": "Mascotas - Update (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/mascotas/1/",
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Firulais\",\n  \"especie\": \"perro\",\n  \"cliente\": 1,\n  \"is_active\": true\n}" }
+          }
+        },
+        { "name": "Mascotas - Delete", "request": { "method": "DELETE", "url": "{{base_url}}/api/mascotas/1/" } },
+        { "name": "Citas - List", "request": { "method": "GET", "url": "{{base_url}}/api/citas/" } },
+        {
+          "name": "Citas - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/citas/",
+            "body": { "mode": "raw", "raw": "{\n  \"mascota\": 1,\n  \"veterinario\": 1,\n  \"fecha\": \"2026-07-01T10:00:00Z\",\n  \"hora\": \"10:00:00\",\n  \"motivo\": \"Control general\"\n}" }
+          }
+        },
+        { "name": "Historiales - List", "request": { "method": "GET", "url": "{{base_url}}/api/historiales/" } },
+        {
+          "name": "Historiales - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/historiales/",
+            "body": { "mode": "raw", "raw": "{\n  \"mascota\": 1,\n  \"veterinario\": 1,\n  \"diagnostico\": \"Otitis leve\",\n  \"tratamiento\": \"Gotas\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Facturacion",
+      "item": [
+        { "name": "Servicios - List", "request": { "method": "GET", "url": "{{base_url}}/api/servicios/" } },
+        {
+          "name": "Servicios - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/servicios/",
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Consulta General\",\n  \"precio\": \"35.00\",\n  \"duracion_minutos\": 30\n}" }
+          }
+        },
+        { "name": "Categorias Producto - List", "request": { "method": "GET", "url": "{{base_url}}/api/categorias-producto/" } },
+        {
+          "name": "Categorias Producto - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/categorias-producto/",
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Medicamentos\"\n}" }
+          }
+        },
+        { "name": "Productos - List", "request": { "method": "GET", "url": "{{base_url}}/api/productos/" } },
+        {
+          "name": "Productos - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/productos/",
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Amoxicilina\",\n  \"categoria\": 1,\n  \"precio_venta\": \"12.50\",\n  \"stock_actual\": 50,\n  \"stock_minimo\": 5,\n  \"unidad_medida\": \"caja\"\n}" }
+          }
+        },
+        { "name": "Proveedores - List", "request": { "method": "GET", "url": "{{base_url}}/api/proveedores/" } },
+        {
+          "name": "Proveedores - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/proveedores/",
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Distribuidora XYZ\",\n  \"telefono\": \"022111222\"\n}" }
+          }
+        },
+        { "name": "Facturas - List", "request": { "method": "GET", "url": "{{base_url}}/api/facturas/" } },
+        {
+          "name": "Facturas - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/facturas/",
+            "body": { "mode": "raw", "raw": "{\n  \"cliente\": 1,\n  \"total\": \"35.00\"\n}" }
+          }
+        },
+        { "name": "Detalles Factura - List", "request": { "method": "GET", "url": "{{base_url}}/api/detalles-factura/" } },
+        {
+          "name": "Detalles Factura - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/detalles-factura/",
+            "body": { "mode": "raw", "raw": "{\n  \"factura\": 1,\n  \"servicio\": 1,\n  \"cantidad\": 1,\n  \"precio_unitario\": \"35.00\",\n  \"subtotal\": \"35.00\"\n}" }
+          }
+        },
+        { "name": "Pagos - List", "request": { "method": "GET", "url": "{{base_url}}/api/pagos/" } },
+        {
+          "name": "Pagos - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/pagos/",
+            "body": { "mode": "raw", "raw": "{\n  \"factura\": 1,\n  \"monto\": \"35.00\",\n  \"metodo_pago\": \"efectivo\"\n}" }
+          }
+        },
+        { "name": "Compras - List", "request": { "method": "GET", "url": "{{base_url}}/api/compras/" } },
+        {
+          "name": "Compras - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/compras/",
+            "body": { "mode": "raw", "raw": "{\n  \"proveedor\": 1,\n  \"numero_factura\": \"F-001\",\n  \"total\": \"100.00\"\n}" }
+          }
+        },
+        { "name": "Detalles Compra - List", "request": { "method": "GET", "url": "{{base_url}}/api/detalles-compra/" } },
+        {
+          "name": "Detalles Compra - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/detalles-compra/",
+            "body": { "mode": "raw", "raw": "{\n  \"compra\": 1,\n  \"producto\": 1,\n  \"cantidad\": 10,\n  \"precio_unitario\": \"10.00\",\n  \"subtotal\": \"100.00\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clinica",
+      "item": [
+        { "name": "Vacunas - List", "request": { "method": "GET", "url": "{{base_url}}/api/vacunas/" } },
+        {
+          "name": "Vacunas - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/vacunas/",
+            "body": { "mode": "raw", "raw": "{\n  \"mascota\": 1,\n  \"veterinario\": 1,\n  \"nombre_vacuna\": \"Antirrabica\",\n  \"fecha_aplicacion\": \"2026-06-01\",\n  \"fecha_proxima_dosis\": \"2027-06-01\"\n}" }
+          }
+        },
+        { "name": "Habitaciones - List", "request": { "method": "GET", "url": "{{base_url}}/api/habitaciones/" } },
+        {
+          "name": "Habitaciones - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/habitaciones/",
+            "body": { "mode": "raw", "raw": "{\n  \"codigo\": \"H-01\",\n  \"tipo\": \"canil\",\n  \"precio_dia\": \"20.00\"\n}" }
+          }
+        },
+        { "name": "Hospitalizaciones - List", "request": { "method": "GET", "url": "{{base_url}}/api/hospitalizaciones/" } },
+        {
+          "name": "Hospitalizaciones - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/hospitalizaciones/",
+            "body": { "mode": "raw", "raw": "{\n  \"mascota\": 1,\n  \"habitacion\": 1,\n  \"veterinario\": 1,\n  \"fecha_ingreso\": \"2026-06-01T10:00:00Z\",\n  \"motivo\": \"Observacion\"\n}" }
+          }
+        },
+        { "name": "Recetas - List", "request": { "method": "GET", "url": "{{base_url}}/api/recetas/" } },
+        {
+          "name": "Recetas - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/recetas/",
+            "body": { "mode": "raw", "raw": "{\n  \"mascota\": 1,\n  \"veterinario\": 1,\n  \"fecha_emision\": \"2026-06-01T09:00:00Z\",\n  \"valida_hasta\": \"2026-07-01\"\n}" }
+          }
+        },
+        { "name": "Detalles Receta - List", "request": { "method": "GET", "url": "{{base_url}}/api/detalles-receta/" } },
+        {
+          "name": "Detalles Receta - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/detalles-receta/",
+            "body": { "mode": "raw", "raw": "{\n  \"receta\": 1,\n  \"producto\": 1,\n  \"dosis\": \"1 tableta\",\n  \"frecuencia\": \"cada 8h\",\n  \"duracion_dias\": 7\n}" }
+          }
+        },
+        { "name": "Notificaciones - List", "request": { "method": "GET", "url": "{{base_url}}/api/notificaciones/" } },
+        {
+          "name": "Notificaciones - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/notificaciones/",
+            "body": { "mode": "raw", "raw": "{\n  \"cliente\": 1,\n  \"tipo\": \"recordatorio\",\n  \"titulo\": \"Cita proxima\",\n  \"mensaje\": \"Recuerde su cita del lunes.\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "MongoDB",
+      "item": [
+        { "name": "Consultas - List", "request": { "method": "GET", "url": "{{base_url}}/api/mongo/consultas/" } },
+        {
+          "name": "Consultas - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/mongo/consultas/",
+            "body": { "mode": "raw", "raw": "{\n  \"mascota_id\": 1,\n  \"sintoma\": \"Cojea de la pata trasera\"\n}" }
+          }
+        },
+        { "name": "Monitoreo Signos - List", "request": { "method": "GET", "url": "{{base_url}}/api/mongo/monitoreo/" } },
+        {
+          "name": "Monitoreo Signos - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/mongo/monitoreo/",
+            "body": { "mode": "raw", "raw": "{\n  \"mascota_id\": 1,\n  \"temperatura\": 38.6,\n  \"ritmo_cardiaco\": 92\n}" }
+          }
+        },
+        { "name": "Notas Voz - List", "request": { "method": "GET", "url": "{{base_url}}/api/mongo/notas-voz/" } },
+        {
+          "name": "Notas Voz - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/mongo/notas-voz/",
+            "body": { "mode": "raw", "raw": "{\n  \"cita_id\": 1,\n  \"transcripcion\": \"Paciente con otitis leve\"\n}" }
+          }
+        },
+        { "name": "Tracking Visitas - List", "request": { "method": "GET", "url": "{{base_url}}/api/mongo/tracking/" } },
+        {
+          "name": "Tracking Visitas - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/mongo/tracking/",
+            "body": { "mode": "raw", "raw": "{\n  \"cita_id\": 1,\n  \"veterinario_id\": 1,\n  \"estado\": \"en_camino\"\n}" }
+          }
+        },
+        { "name": "Galeria Mascota - List", "request": { "method": "GET", "url": "{{base_url}}/api/mongo/galeria-mascota/" } },
+        {
+          "name": "Galeria Mascota - Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/mongo/galeria-mascota/",
+            "body": { "mode": "raw", "raw": "{\n  \"mascota_id\": 1,\n  \"fotos\": [{ \"url\": \"https://ejemplo.com/a.jpg\", \"descripcion\": \"Primera visita\" }]\n}" }
+          }
+        }
+      ]
+    }
+  ]
+}

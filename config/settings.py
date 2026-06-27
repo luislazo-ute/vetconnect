@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
+    'drf_spectacular',
     'corsheaders',
     'accounts',
     'mongo_app',
@@ -164,6 +165,17 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'pacientes.pagination.StandardPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# Documentación OpenAPI/Swagger (drf-spectacular)
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'VetConnect API',
+    'DESCRIPTION': 'API REST de gestión veterinaria — Django REST Framework + PostgreSQL + MongoDB. Autenticación JWT.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # La documentación es pública para que se pueda revisar sin login.
+    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
 }
 
 # JWT (djangorestframework-simplejwt)
