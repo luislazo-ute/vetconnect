@@ -90,6 +90,14 @@ jobs:
           echo "── 2. Instalando dependencias ──"
           uv pip install -r requirements.txt
 
+          echo "── 2.5 Backup de bases de datos (antes de migrar) ──"
+          mkdir -p backups
+          TS=$(date +%Y%m%d_%H%M%S)
+          sudo -u postgres pg_dump vetconnect_db > backups/pg_${TS}.sql && echo "  Postgres backup OK" || echo "  WARN: backup Postgres fallo"
+          mongodump --quiet --db vetconnect_mongo --archive=backups/mongo_${TS}.archive && echo "  Mongo backup OK" || echo "  WARN: backup Mongo fallo"
+          # conservar solo los backups de los ultimos 7 dias
+          find backups -type f -mtime +7 -delete 2>/dev/null || true
+
           echo "── 3. Migraciones ──"
           .venv/bin/python manage.py migrate --noinput
 

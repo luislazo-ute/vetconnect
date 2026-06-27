@@ -24,6 +24,9 @@ db.sqlite3-journal
 # Claude Code (config local)
 .claude/
 
+# Backups de BD generados en el server (deploy)
+backups/
+
 # Migraciones (las dejamos, pero si acaso)
 # */migrations/*.py
 # !*/migrations/__init__.py
