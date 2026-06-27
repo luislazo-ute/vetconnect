@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'mongo_app',
     'pacientes',
     'facturacion',
+    'clinica',
 ]
 
 MIDDLEWARE = [
