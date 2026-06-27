@@ -14,7 +14,8 @@ class Notificacion(models.Model):
         on_delete=models.CASCADE,
         related_name='notificaciones',
     )
-    tipo = models.CharField(max_length=20, choices=TIPOS)
+    tipo = models.CharField(max_length=50, choices=TIPOS)
+    titulo = models.CharField(max_length=200, blank=True, default='')
     mensaje = models.TextField()
     leida = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -9,6 +9,6 @@ class VacunaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vacuna
         fields = ['id', 'mascota', 'mascota_nombre', 'veterinario', 'veterinario_nombre',
-                  'nombre', 'fecha_aplicacion', 'fecha_proxima', 'lote',
+                  'nombre_vacuna', 'fecha_aplicacion', 'fecha_proxima_dosis', 'lote',
                   'observaciones', 'created_at']
         read_only_fields = ['id', 'created_at']

@@ -22,7 +22,7 @@ class Hospitalizacion(models.Model):
         related_name='hospitalizaciones',
     )
     fecha_ingreso = models.DateTimeField()
-    fecha_salida = models.DateTimeField(null=True, blank=True)
+    fecha_alta = models.DateTimeField(null=True, blank=True)
     motivo = models.TextField()
     diagnostico = models.TextField(blank=True, default='')
     tratamiento = models.TextField(blank=True, default='')
@@ -31,7 +31,7 @@ class Hospitalizacion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.mascota.nombre} - {self.habitacion.numero} ({self.fecha_ingreso.date()})'
+        return f'{self.mascota.nombre} - {self.habitacion.codigo} ({self.fecha_ingreso.date()})'
 
     class Meta:
         db_table = 'hospitalizacion'

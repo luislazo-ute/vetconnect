@@ -8,6 +8,7 @@ class RecetaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Receta
-        fields = ['id', 'mascota', 'mascota_nombre', 'veterinario', 'veterinario_nombre',
-                  'fecha', 'instrucciones', 'created_at']
+        fields = ['id', 'cita', 'mascota', 'mascota_nombre', 'veterinario',
+                  'veterinario_nombre', 'fecha_emision', 'valida_hasta',
+                  'instrucciones', 'created_at']
         read_only_fields = ['id', 'created_at']

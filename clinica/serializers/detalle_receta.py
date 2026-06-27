@@ -8,5 +8,5 @@ class DetalleRecetaSerializer(serializers.ModelSerializer):
     class Meta:
         model = DetalleReceta
         fields = ['id', 'receta', 'producto', 'producto_nombre',
-                  'dosis', 'frecuencia', 'duracion', 'observaciones']
+                  'dosis', 'frecuencia', 'duracion_dias', 'observaciones']
         read_only_fields = ['id']

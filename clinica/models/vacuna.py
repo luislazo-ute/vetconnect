@@ -15,15 +15,15 @@ class Vacuna(models.Model):
         blank=True,
         related_name='vacunas_aplicadas',
     )
-    nombre = models.CharField(max_length=200)
+    nombre_vacuna = models.CharField(max_length=100)
     fecha_aplicacion = models.DateField()
-    fecha_proxima = models.DateField(null=True, blank=True)
-    lote = models.CharField(max_length=100, blank=True, default='')
+    fecha_proxima_dosis = models.DateField(null=True, blank=True)
+    lote = models.CharField(max_length=50, blank=True, default='')
     observaciones = models.TextField(blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.nombre} - {self.mascota.nombre} ({self.fecha_aplicacion})'
+        return f'{self.nombre_vacuna} - {self.mascota.nombre} ({self.fecha_aplicacion})'
 
     class Meta:
         db_table = 'vacuna'

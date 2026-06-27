@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from ..models import Notificacion
 from ..serializers import NotificacionSerializer
-from facturacion.permissions import IsAdminOrReadOnly
+from ..permissions import IsAdminOrReadOnly
 
 
 class NotificacionViewSet(viewsets.ModelViewSet):

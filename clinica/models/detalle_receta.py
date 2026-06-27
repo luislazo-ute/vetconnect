@@ -14,9 +14,9 @@ class DetalleReceta(models.Model):
         on_delete=models.PROTECT,
         related_name='detalles_receta',
     )
-    dosis = models.CharField(max_length=200)
-    frecuencia = models.CharField(max_length=200)
-    duracion = models.CharField(max_length=200, blank=True, default='')
+    dosis = models.CharField(max_length=100)
+    frecuencia = models.CharField(max_length=100)
+    duracion_dias = models.PositiveIntegerField(null=True, blank=True)
     observaciones = models.TextField(blank=True, default='')
 
     def __str__(self):
