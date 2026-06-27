@@ -99,9 +99,16 @@ jobs:
           echo "── 5. Reiniciando Gunicorn ──"
           systemctl restart gunicorn-vetconnect
 
-          echo "── 6. Health check ──"
-          sleep 3
-          curl -sf http://127.0.0.1/api/health/ && echo " OK" || (echo "API ERROR" && exit 1)
-
-          echo "Despliegue completado."
+          echo "── 6. Health check (con reintentos) ──"
+          for i in 1 2 3 4 5 6 7 8; do
+            sleep 3
+            if curl -sf http://127.0.0.1/api/health/ > /dev/null; then
+              echo "API OK (intento $i)"
+              echo "Despliegue completado."
+              exit 0
+            fi
+            echo "intento $i: aun no responde, reintentando..."
+          done
+          echo "API ERROR: no respondio tras varios intentos"
+          exit 1
           ENDSSH
